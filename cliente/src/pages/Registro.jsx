@@ -1,20 +1,32 @@
 import { useEffect, useState } from "react";
 export default function registrar(){
     const [usuarios, setUsuarios] = useState([]);         
-    const [gmail, setGmail] = useState([]);
+    const [email, setEmail] = useState([]);
     useEffect(() => {
       const buscarUsuario = async () => {
         try {
           const resposta = await fetch("http://localhost:3000/usuarios");
           const dados = await resposta.json();
           setUsuarios(dados);
-          setGmail(dados);
+          setEmail(dados);
         } catch {
           alert('Ocorreu um erro no app!');
         }
       }
       buscarUsuario();
     }, [])
+
+const deletar = async(id) => {
+         try{
+              await fetch('http://localhost:3000/usuario/'+ id ,{
+                mathod: 'DELETE'
+              });
+         }catch{
+              alert("Ish lascou!");
+         }
+
+}
+
     return(
         <>
     <table>
@@ -27,6 +39,9 @@ export default function registrar(){
         {
             usuarios.map((usuario) =>
                 <tr key={usuario.id}>
+                  <td>{usuario.nome}</td>
+                  <td>{usuario.email}</td>
+                  <td> <button onClick={()=> deletar(usuario.id)}> x </button> </td>
             
           <div className="separar">
             <td>{usuario.nome}</td>
@@ -41,11 +56,11 @@ export default function registrar(){
           <td className="border">E-mail</td>
         </tr>
         {
-            gmail.map((gmail) =>
-                <tr key={gmail.id}>
+            email.map((email) =>
+                <tr key={email.id}>
               
           <div className="separar">
-            <td>{gmail.email}</td>
+            <td>{email.email}</td>
           </div>
           </tr>
         )}
